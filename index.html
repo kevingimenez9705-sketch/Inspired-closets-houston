@@ -246,12 +246,15 @@
   .space-card .ph { height: 84px; border: none; border-radius: 0; font-size: 10.5px; }
   .space-card-body { padding: 13px 14px; flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .space-card-title { font-family: var(--font-display); font-size: 15.5px; color: var(--charcoal); }
-  .space-card.is-live { cursor: pointer; background: none; border: none; padding: 0; text-align: left; font: inherit; width: 100%; transition: border-color 0.2s, transform 0.2s var(--ease-out); border: 1px solid var(--taupe); }
+  .space-card.is-live { cursor: pointer; background: none; border: none; padding: 0; text-align: left; font: inherit; width: 100%; transition: border-color 0.2s, box-shadow 0.2s; border: 1px solid var(--taupe); }
   /* Every part of the card (photo, title, arrow icon) must trigger the same
      click as the button itself — none of its children can "steal" the hit,
      otherwise which part responds ends up depending on per-card image state. */
   .space-card.is-live * { pointer-events: none; }
-  .space-card.is-live:hover, .space-card.is-live:focus-visible { border-color: var(--wine); transform: translateY(-2px); }
+  /* No transform/movement on hover: shifting the box under the cursor is
+     exactly what made clicks feel inconsistent depending on how the mouse
+     approached the card. Feedback is color + shadow only, box stays put. */
+  .space-card.is-live:hover, .space-card.is-live:focus-visible { border-color: var(--wine); box-shadow: 0 4px 14px rgba(123, 30, 62, 0.15); }
   .space-card.is-live:focus-visible { outline: 2px solid var(--wine); outline-offset: 2px; }
   .space-card.is-live .ph { position: relative; padding: 0; border-style: solid; }
   .space-card.is-live .ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
