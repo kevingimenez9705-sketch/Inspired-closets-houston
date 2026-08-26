@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Inspired Closets Houston — Preview V1.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Caveat:wght@600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<!--
+  INTERNAL DRAFT v2 — NOT FINAL CLIENT-FACING COPY
+  =================================================
+  Cambios vs. v1:
+  - Se verificó https://www.inspiredclosets.com/locations/houston/ y
+    https://www.inspiredclosets.com/locations/houston/story/ para reemplazar
+    los placeholders de texto por contenido real del sitio (parafraseado,
+    no copiado literal por temas de derechos de autor).
+  - Se agregó el selector de vendedor/diseñador al inicio (igual mecánica
+    que el archivo Maxwell-Austin: localStorage + tarjeta "Tu diseñador" +
+    ícono de engranaje para volver a abrir el selector), con el equipo
+    REAL de Houston listado en la página "Our Story":
+      Ronald Perez — Business Operations (Owner)
+      Rosa Perez — Finance Director (Owner)
+      Patricia "Pati" Juarez — Head Designer
+      Merary Torres — Designer
+      Cassandra Perez — Showroom Coordinator
+      Juan Juarez — Operations Manager
+    Para el selector solo dejé activos a Pati y Merary (son los dos roles
+    de cara al cliente / diseño), más "Nuestro equipo" como opción neutra.
+    Si querés que TODOS aparezcan seleccionables (ej. para que Ronald o
+    Rosa también puedan presentar), decime y lo sumo.
+  - Sumé 4 pantallas más con contenido real: Meet the Team, What to Expect
+    at Your Appointment, FAQ (con el rango de precio real: closets chicos
+    desde ~$5,000), y Client Reviews (testimonios reales parafraseados:
+    Shanna, Nicki, Haidee, Erik, Sue).
+  - Datos de contacto reales: 7613 Katy Freeway, Houston, TX 77024 ·
+    281-942-7003 · info@inspiredclosetshtx.com · Lun-Vie 10-6, Sáb 10-2.
+
+  TODAVÍA PENDIENTE / NO INVENTADO:
+  - Fotos de personas, showroom y proyectos — no hay ninguna imagen
+    embebida, son todos placeholders con borde punteado (buscá ".ph" y
+    ".team-photo-ph" para encontrarlos).
+  - Financiamiento: el sitio de Houston no muestra detalle de financiamiento
+    (Maxwell-Austin sí tiene una sección propia) — la dejé afuera.
+  - Precio exacto por proyecto: el sitio da un piso ("desde ~$5,000" en
+    closets chicos) pero no una tabla de precios — no inventé más números.
+
+  v3 — FOTOS REALES CONECTADAS (2025-08):
+  Se enlazaron directo (hotlink, sin descargar/embeder) las 6 fotos reales
+  del equipo de Houston y la foto del showroom, todas tomadas de
+  https://www.inspiredclosets.com/locations/houston/story/ (alojadas en el
+  propio servidor del cliente: inspiredclosetsmediafiles.s3.amazonaws.com).
+  Si algún día esa URL se cae o el cliente reemplaza esas fotos, cada <img>
+  tiene un onerror que vuelve automáticamente al placeholder con iniciales.
+  Sigue sin haber fotos de proyectos/espacios reales de Houston (closets,
+  pantries, etc.) — esas secciones siguen con placeholder punteado.
+-->
+<style>
+  :root {
+    --ivory: #F6F1E8;
+    --cream: #E8DFCD;
+    --charcoal: #1A1817;
+    --charcoal-soft: #3A3431;
+    --wine: #7B1E3E;
+    --wine-deep: #5A1530;
+    --wine-light: #A84466;
+    --wine-tint: #F5E6EB;
+    --walnut: #4A2F1E;
+    --taupe: #C8BBA3;
+    --white-warm: #FBF7F0;
+    --sage-dim: #8C8574;
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "DM Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-script: "Caveat", cursive;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    background: var(--ivory);
+    color: var(--charcoal);
+    font-family: var(--font-body);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 18% 25%, rgba(123, 30, 62, 0.05), transparent 55%),
+      radial-gradient(circle at 82% 75%, rgba(74, 47, 30, 0.04), transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app { position: relative; width: 100vw; height: 100vh; z-index: 2; overflow: hidden; transform-origin: top left; transition: transform 0.3s var(--ease-out); }
+  .app.scale-115 { transform: scale(1.15); width: calc(100vw / 1.15); height: calc(100vh / 1.15); }
+  .app.scale-130 { transform: scale(1.3); width: calc(100vw / 1.3); height: calc(100vh / 1.3); }
+
+  /* ===== HEADER ===== */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px clamp(20px, 4vw, 56px);
+    pointer-events: none;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; pointer-events: auto; }
+  .brand-mark {
+    width: 50px; height: 50px; border: 1.5px solid var(--charcoal);
+    background: var(--white-warm); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 5px 4px 4px;
+  }
+  .brand-mark-script {
+    font-family: var(--font-script); font-weight: 600; font-size: 17px;
+    color: var(--wine); line-height: 1; border-bottom: 1.2px solid var(--charcoal);
+    padding-bottom: 1px; margin-bottom: 3px; letter-spacing: -0.01em;
+  }
+  .brand-mark-sans { font-family: var(--font-body); font-size: 6.5px; font-weight: 500; letter-spacing: 0.22em; color: var(--charcoal); text-align: center; }
+  .brand-text { font-family: var(--font-display); font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--charcoal); font-weight: 500; }
+  .brand-text small { display: block; font-family: var(--font-body); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sage-dim); margin-top: 2px; font-weight: 400; }
+  .chapter-meta { text-align: right; pointer-events: auto; }
+  .chapter-num { font-size: 11px; letter-spacing: 0.14em; color: var(--sage-dim); }
+  .chapter-label { display: block; font-family: var(--font-display); font-size: 14px; color: var(--wine); margin-top: 2px; }
+
+  /* gear to reopen designer picker */
+  .gear-btn {
+    pointer-events: auto; margin-left: 14px; width: 30px; height: 30px; border-radius: 50%;
+    border: 1px solid var(--taupe); background: var(--white-warm); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; color: var(--charcoal-soft);
+  }
+  .gear-btn svg { width: 15px; height: 15px; }
+
+  /* ===== INDEX (secondary nav) ===== */
+  .index-dots {
+    position: fixed; right: clamp(16px, 3vw, 36px); top: 50%; transform: translateY(-50%);
+    z-index: 50; display: flex; flex-direction: column; gap: 12px;
+  }
+  .index-dot {
+    width: 9px; height: 9px; border-radius: 50%; background: var(--taupe);
+    border: none; cursor: pointer; padding: 0; position: relative;
+    transition: background 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  }
+  .index-dot.active { background: var(--wine); transform: scale(1.35); }
+  .index-dot .tip {
+    position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+    font-size: 11px; white-space: nowrap; background: var(--charcoal); color: var(--white-warm);
+    padding: 4px 9px; border-radius: 4px; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .index-dot:hover .tip { opacity: 1; }
+
+  /* ===== SECTIONS ===== */
+  .sections { position: relative; width: 100%; height: 100%; }
+  .section {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: flex-start;
+    padding: 128px clamp(24px, 7vw, 100px) 120px;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transform: translateY(18px);
+    transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out), visibility 0.55s;
+    overflow-y: auto;
+  }
+  .section.active { opacity: 1; visibility: visible; pointer-events: auto; transform: translateY(0); }
+  .section > *:first-child { margin-top: auto; }
+  .section > *:last-child { margin-bottom: auto; }
+
+  .eyebrow {
+    font-size: 12.5px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--wine); font-weight: 500; margin-bottom: 14px;
+  }
+  .heading {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(32px, 5vw, 58px); line-height: 1.06; color: var(--charcoal);
+  }
+  .heading em { font-style: italic; color: var(--wine); }
+  .body-text { font-size: 16px; line-height: 1.65; color: var(--charcoal-soft); max-width: 58ch; }
+  .divider { display: block; width: 46px; height: 2px; background: var(--wine); margin: 20px 0; }
+  .center { text-align: center; }
+  .maxw { max-width: 900px; margin: 0 auto; }
+
+  /* ===== 01 WELCOME ===== */
+  .welcome { align-items: center; text-align: center; }
+  .welcome-kicker { font-size: 12.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--wine); margin-bottom: 16px; }
+  .welcome-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(46px, 8.5vw, 100px); line-height: 0.98; }
+  .welcome-title em { font-style: italic; color: var(--wine); }
+  .welcome-greeting { margin-top: 16px; font-size: 15px; color: var(--charcoal-soft); }
+  .welcome-greeting strong { color: var(--wine); }
+  .welcome-sub { margin: 22px auto 0; max-width: 46ch; font-size: 17px; line-height: 1.65; color: var(--charcoal-soft); }
+  .welcome-locale { margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage-dim); flex-wrap: wrap; }
+  .welcome-locale-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--taupe); }
+  .welcome-scroll { position: absolute; bottom: 46px; left: 50%; transform: translateX(-50%); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sage-dim); }
+
+  /* ===== STORY ===== */
+  .story-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; max-width: 1220px; margin: 0 auto; width: 100%; }
+  .story-quote { margin-top: 20px; font-family: var(--font-display); font-style: italic; font-size: 17px; color: var(--wine-deep); line-height: 1.5; border-left: 2px solid var(--wine); padding-left: 18px; }
+  .story-signoff { margin-top: 14px; font-size: 13px; color: var(--sage-dim); }
+  .story-signoff strong { color: var(--charcoal); display: block; font-size: 14px; }
+
+  /* ===== TEAM ===== */
+  .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 18px; max-width: 1180px; margin: 30px auto 0; width: 100%; }
+  .team-card { background: var(--white-warm); border: 1px solid var(--taupe); border-radius: 4px; padding: 18px; text-align: center; }
+  .team-card.is-you { border-color: var(--wine); box-shadow: 0 0 0 1px var(--wine); }
+  .team-photo-ph { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 12px; background: var(--wine-tint); color: var(--wine-deep); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 18px; border: 1.5px dashed var(--wine-light); overflow: hidden; }
+  .team-badge { display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: white; background: var(--wine); padding: 3px 9px; border-radius: 20px; margin-bottom: 8px; }
+  .team-name { font-family: var(--font-display); font-size: 16px; margin-bottom: 2px; }
+  .team-role { font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--sage-dim); margin-bottom: 8px; }
+  .team-desc { font-size: 12.5px; line-height: 1.5; color: var(--charcoal-soft); }
+
+  /* ===== SPACES ===== */
+  .spaces-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; max-width: 1180px; margin: 28px auto 0; width: 100%; }
+  .space-card { background: var(--white-warm); border: 1px solid var(--taupe); border-radius: 4px; padding: 0; overflow: hidden; min-height: 150px; display: flex; flex-direction: column; position: relative; }
+  .space-card .ph { height: 84px; border: none; border-radius: 0; font-size: 10.5px; }
+  .space-card-body { padding: 13px 14px; flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .space-card-title { font-family: var(--font-display); font-size: 15.5px; color: var(--charcoal); }
+  .space-card.is-live { cursor: pointer; background: none; border: none; padding: 0; text-align: left; font: inherit; width: 100%; transition: border-color 0.2s, transform 0.2s var(--ease-out); border: 1px solid var(--taupe); }
+  .space-card.is-live:hover, .space-card.is-live:focus-visible { border-color: var(--wine); transform: translateY(-2px); }
+  .space-card.is-live:focus-visible { outline: 2px solid var(--wine); outline-offset: 2px; }
+  .space-card.is-live .ph { position: relative; padding: 0; border-style: solid; }
+  .space-card.is-live .ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .space-card-arrow { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--wine-light); color: var(--wine); display: inline-flex; align-items: center; justify-content: center; }
+  .space-card-arrow svg { width: 11px; height: 11px; }
+  .space-card-soon { font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage-dim); }
+
+  /* ===== SPACE DETAIL (Our Spaces sub-experience) ===== */
+  .space-overlay {
+    position: fixed; inset: 0; z-index: 90; background: rgba(26,24,23,0.68);
+    display: flex; align-items: center; justify-content: center; padding: clamp(12px, 4vw, 32px);
+    opacity: 0; visibility: hidden; transition: opacity 0.3s var(--ease-out), visibility 0.3s;
+  }
+  .space-overlay.open { opacity: 1; visibility: visible; }
+  .space-panel {
+    background: var(--ivory); border-radius: 6px; max-width: 880px; width: 100%; max-height: 92vh;
+    overflow-y: auto; box-shadow: 0 30px 80px rgba(26,24,23,0.35); position: relative;
+  }
+  .space-panel-close {
+    position: absolute; top: 14px; right: 14px; z-index: 2; width: 34px; height: 34px; border-radius: 50%;
+    border: 1px solid var(--taupe); background: var(--white-warm); color: var(--charcoal-soft);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+  .space-panel-close:hover { border-color: var(--wine-light); color: var(--wine-deep); }
+  .space-panel-close svg { width: 16px; height: 16px; }
+  .space-panel-head { padding: 30px clamp(20px, 4vw, 40px) 0; }
+  .space-panel-eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--wine); }
+  .space-panel-title { font-family: var(--font-display); font-size: clamp(24px, 3.4vw, 34px); margin-top: 6px; color: var(--charcoal); }
+  .space-panel-intro { font-size: 14.5px; line-height: 1.6; color: var(--charcoal-soft); max-width: 62ch; margin-top: 10px; }
+  .space-gallery { position: relative; margin: 22px clamp(20px, 4vw, 40px) 0; border-radius: 4px; overflow: hidden; background: var(--charcoal); aspect-ratio: 4/3; }
+  .space-gallery-track { position: relative; width: 100%; height: 100%; }
+  .space-gallery-slide {
+    position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity 0.4s var(--ease-out), visibility 0.4s;
+  }
+  .space-gallery-slide.active { opacity: 1; visibility: visible; }
+  .space-gallery-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .space-gallery-caption {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 18px;
+    background: linear-gradient(to top, rgba(26,24,23,0.75), transparent);
+    color: var(--white-warm); font-size: 13px; letter-spacing: 0.02em;
+  }
+  .space-gallery-caption strong { font-family: var(--font-display); font-size: 15px; display: block; font-weight: 400; }
+  .space-gallery-nav {
+    position: absolute; top: 50%; transform: translateY(-50%); width: 38px; height: 38px; border-radius: 50%;
+    border: none; background: rgba(251,247,240,0.9); color: var(--charcoal); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .space-gallery-nav:hover { background: var(--white-warm); }
+  .space-gallery-nav svg { width: 18px; height: 18px; }
+  .space-gallery-prev { left: 12px; }
+  .space-gallery-next { right: 12px; }
+  .space-gallery-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
+  .space-gallery-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(251,247,240,0.5); border: none; cursor: pointer; padding: 0; }
+  .space-gallery-dot.active { background: var(--white-warm); }
+  .space-panel-foot { padding: 20px clamp(20px, 4vw, 40px) 32px; display: flex; justify-content: flex-end; }
+  .space-panel-back { font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--wine-deep); background: none; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .space-panel-back svg { width: 14px; height: 14px; }
+  @media (max-width: 520px) {
+    .space-gallery { aspect-ratio: 1/1; }
+    .space-gallery-nav { width: 32px; height: 32px; }
+  }
+
+  /* ===== PROCESS ===== */
+  .process-list { max-width: 940px; margin: 26px auto 0; width: 100%; }
+  .process-step { display: grid; grid-template-columns: 60px 1fr; gap: 20px; padding: 16px 0; border-bottom: 1px solid var(--taupe); }
+  .process-step:last-child { border-bottom: none; }
+  .process-num { font-family: var(--font-display); font-size: 24px; color: var(--wine); font-style: italic; }
+  .process-title { font-family: var(--font-display); font-size: 18px; margin-bottom: 4px; }
+  .process-desc { font-size: 14px; line-height: 1.55; color: var(--charcoal-soft); max-width: 62ch; }
+
+  /* ===== APPOINTMENT CHECKLIST ===== */
+  .check-list { max-width: 640px; margin: 26px auto 0; width: 100%; display: flex; flex-direction: column; gap: 12px; }
+  .check-item { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; color: var(--charcoal-soft); }
+  .check-item .mark { flex: none; width: 18px; height: 18px; border-radius: 50%; background: var(--wine); color: white; font-size: 11px; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+
+  /* ===== FAQ ===== */
+  .faq-list { max-width: 760px; margin: 26px auto 0; width: 100%; display: flex; flex-direction: column; gap: 18px; }
+  .faq-q { font-family: var(--font-display); font-size: 17px; color: var(--wine-deep); margin-bottom: 6px; }
+  .faq-a { font-size: 14.5px; line-height: 1.6; color: var(--charcoal-soft); }
+
+  /* ===== REVIEWS ===== */
+  .review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 1080px; margin: 28px auto 0; width: 100%; }
+  .review-card { background: var(--white-warm); border: 1px solid var(--taupe); border-radius: 4px; padding: 20px; }
+  .review-quote-mark { font-family: var(--font-display); font-size: 30px; color: var(--wine-light); line-height: 1; }
+  .review-text { font-size: 13.5px; line-height: 1.55; color: var(--charcoal-soft); margin: 8px 0 12px; }
+  .review-name { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--wine-deep); font-weight: 600; }
+
+  /* ===== 05 CTA / NEXT STEPS ===== */
+  .cta { align-items: center; text-align: center; }
+  .cta-title { font-family: var(--font-display); font-size: clamp(30px, 4.6vw, 52px); line-height: 1.08; max-width: 16ch; }
+  .cta-title em { font-style: italic; color: var(--wine); }
+  .cta-sub { margin: 18px auto 0; max-width: 50ch; font-size: 15.5px; line-height: 1.6; color: var(--charcoal-soft); }
+  .cta-actions { margin-top: 30px; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .btn {
+    font-family: var(--font-body); font-size: 13.5px; letter-spacing: 0.04em;
+    padding: 14px 28px; border-radius: 2px; cursor: pointer; border: 1px solid var(--wine);
+    text-decoration: none; display: inline-block;
+  }
+  .btn-solid { background: var(--wine); color: var(--white-warm); }
+  .btn-outline { background: transparent; color: var(--wine); }
+  .cta-contact { margin-top: 34px; font-size: 13px; line-height: 1.8; color: var(--charcoal-soft); }
+  .cta-contact strong { color: var(--charcoal); }
+  .cta-areas { margin-top: 18px; font-size: 12px; letter-spacing: 0.04em; color: var(--sage-dim); max-width: 62ch; }
+  .cta-areas strong { color: var(--charcoal-soft); font-weight: 500; }
+
+  /* ===== IMAGE PLACEHOLDER ===== */
+  .ph {
+    border: 1.5px dashed var(--wine-light);
+    background: repeating-linear-gradient(135deg, var(--wine-tint), var(--wine-tint) 10px, var(--ivory) 10px, var(--ivory) 20px);
+    color: var(--wine-deep); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    font-size: 12px; letter-spacing: 0.03em; padding: 10px; line-height: 1.4;
+  }
+  .ph small { display: block; margin-top: 4px; opacity: 0.75; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .story-photo { aspect-ratio: 4/5; }
+
+  /* ===== BOTTOM NAV ===== */
+  .bottombar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px clamp(20px, 4vw, 56px);
+  }
+  .nav-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: none; border: none; cursor: pointer;
+    font-family: var(--font-body); font-size: 12.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--charcoal-soft); padding: 10px 6px;
+  }
+  .nav-btn:disabled { opacity: 0.25; cursor: default; }
+  .nav-btn svg { width: 16px; height: 16px; }
+  .progress-track { flex: 1; max-width: 200px; height: 2px; background: var(--taupe); margin: 0 20px; position: relative; border-radius: 2px; overflow: hidden; }
+  .present-btn {
+    display: flex; align-items: center; gap: 6px;
+    background: none; border: 1px solid var(--taupe); border-radius: 3px; cursor: pointer;
+    font-family: var(--font-body); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--charcoal-soft); padding: 8px 12px; margin-left: 14px;
+  }
+  .present-btn:hover { border-color: var(--wine-light); color: var(--wine-deep); }
+  .present-btn svg { width: 14px; height: 14px; }
+  .progress-fill { position: absolute; inset: 0; background: var(--wine); transform-origin: left; transition: transform 0.5s var(--ease-out); }
+
+  /* ===== DESIGNER PICKER OVERLAY ===== */
+  .dp-overlay {
+    position: fixed; inset: 0; z-index: 100; background: rgba(26,24,23,0.55);
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+    opacity: 0; visibility: hidden; transition: opacity 0.35s, visibility 0.35s;
+  }
+  .dp-overlay.open { opacity: 1; visibility: visible; }
+  .dp-panel {
+    background: var(--ivory); border-radius: 6px; max-width: 560px; width: 100%;
+    padding: 40px clamp(24px, 5vw, 44px); max-height: 88vh; overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(26,24,23,0.3);
+  }
+  .dp-eyebrow { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--wine); margin-bottom: 8px; }
+  .dp-title { font-family: var(--font-display); font-size: 26px; margin-bottom: 8px; }
+  .dp-sub { font-size: 14px; color: var(--charcoal-soft); margin-bottom: 24px; line-height: 1.5; }
+  .dp-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .dp-card {
+    border: 1.5px solid var(--taupe); border-radius: 4px; padding: 16px; cursor: pointer;
+    background: var(--white-warm); text-align: center; transition: border-color 0.2s;
+  }
+  .dp-card:hover { border-color: var(--wine-light); }
+  .dp-card.selected { border-color: var(--wine); box-shadow: 0 0 0 1px var(--wine); }
+  .dp-card .dp-photo-ph { width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 10px; background: var(--wine-tint); color: var(--wine-deep); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 15px; border: 1.5px dashed var(--wine-light); overflow: hidden; }
+  .dp-card .dp-name { font-family: var(--font-display); font-size: 15px; }
+  .dp-card .dp-role { font-size: 11px; color: var(--sage-dim); margin-top: 2px; }
+  .dp-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .dp-btn { font-size: 13px; padding: 11px 22px; border-radius: 2px; cursor: pointer; border: 1px solid var(--taupe); background: transparent; color: var(--charcoal-soft); }
+  .dp-btn.dp-confirm { border-color: var(--wine); background: var(--wine); color: white; }
+  .dp-btn:disabled { opacity: 0.4; cursor: default; }
+
+  @media (max-width: 860px) {
+    .story-layout { grid-template-columns: 1fr; }
+    .spaces-grid { grid-template-columns: repeat(2, 1fr); }
+    .review-grid { grid-template-columns: 1fr; }
+    .index-dots .tip { display: none; }
+    .section { padding: 116px 20px 128px; }
+    .present-btn span, .present-btn { font-size: 0; padding: 8px; }
+    .present-btn svg { width: 15px; height: 15px; }
+  }
+  @media (max-width: 520px) {
+    .dp-cards { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: 1fr 1fr; }
+    .process-step { grid-template-columns: 36px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app" id="appRoot">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <div class="brand-mark-script">Inspired</div>
+        <div class="brand-mark-sans">CLOSETS</div>
+      </div>
+      <div class="brand-text">Houston<small>Custom Storage</small></div>
+      <button class="gear-btn" id="dpGear" aria-label="Switch presenter" title="Switch presenter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09A1.65 1.65 0 0015 4.6a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="chapter-meta">
+      <span class="chapter-num" id="chapterNum">01 / 09</span>
+      <span class="chapter-label" id="chapterLabel">Welcome</span>
+    </div>
+  </div>
+
+  <div class="index-dots" id="indexDots"></div>
+
+  <div class="sections" id="sections">
+
+    <!-- 01 WELCOME -->
+    <section class="section active" data-label="Welcome">
+      <div class="welcome">
+        <div class="welcome-kicker">Custom closets &amp; storage · Greater Houston</div>
+        <h1 class="welcome-title">Inspired<br>Closets<em>.</em></h1>
+        <p class="welcome-greeting" id="welcomeGreeting"></p>
+        <p class="welcome-sub">Custom storage designed around how Houston actually lives — from high-rise closets downtown to walk-ins in Sugar Land, built to bring calm to your everyday routine.</p>
+        <div class="welcome-locale">
+          <span>7613 Katy Freeway, Houston, TX</span>
+          <span class="welcome-locale-dot"></span>
+          <span>Free in-home consultation</span>
+          <span class="welcome-locale-dot"></span>
+          <span>Local design &amp; installation</span>
+        </div>
+      </div>
+      <div class="welcome-scroll">Use → or the side dots to continue</div>
+    </section>
+
+    <!-- 02 OUR STORY -->
+    <section class="section" data-label="Our Story">
+      <div class="story-layout">
+        <div>
+          <div class="eyebrow">Our Story</div>
+          <h1 class="heading">A Houston showroom,<br>built on <em>believing in home.</em></h1>
+          <span class="divider"></span>
+          <p class="body-text">For owners Ronald &amp; Rosa Perez, home has always meant more than an address — it's where identity, comfort, and pride take shape. After years spent building businesses and welcoming spaces across industries and continents, they saw the same thing everywhere: thoughtful design changes how people actually live.</p>
+          <p class="body-text" style="margin-top:14px;">That belief is what the Houston showroom was built on — custom closets, pantries, and home organization systems that blend smart design with a look that lasts, tailored to the way each family really lives.</p>
+          <div class="story-quote">This isn't just about organization. It's about giving you a home that helps you live better.</div>
+          <div class="story-signoff"><strong>Ronald &amp; Rosa Perez</strong>Owner &amp; President, Inspired Closets Houston</div>
+        </div>
+        <div class="ph story-photo" style="padding:0;border-style:solid;overflow:hidden;"><img src="https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2023/03/02103514/showroom.jpg" alt="Inspired Closets Houston showroom" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.outerHTML='&lt;div class=&quot;ph story-photo&quot;&gt;Photo: Ronald &amp; Rosa Perez, or the Houston showroom&lt;small&gt;Replace this block with an &amp;lt;img&amp;gt;&lt;/small&gt;&lt;/div&gt;';"></div>
+      </div>
+    </section>
+
+    <!-- 03 MEET THE TEAM -->
+    <section class="section" data-label="Meet the Team">
+      <div class="center maxw">
+        <div class="eyebrow">Meet the Team</div>
+        <h1 class="heading">The people behind<br>your <em>project.</em></h1>
+        <p class="body-text" style="margin:16px auto 0;">You'll get to know the people who'll actually be in your home, managing your project and bringing it to life.</p>
+      </div>
+      <div class="team-grid" id="teamGrid">
+        <!-- populated by JS from TEAM data, so the presenter's card can be highlighted -->
+      </div>
+    </section>
+
+    <!-- 04 SPACES -->
+    <section class="section" data-label="Our Spaces">
+      <div class="maxw center" style="margin-bottom:6px;">
+        <div class="eyebrow">What We Design</div>
+        <h1 class="heading">A system for<br>every&nbsp;<em>space.</em></h1>
+      </div>
+      <div class="spaces-grid" id="spacesGrid"></div>
+    </section>
+
+    <!-- 05 PROCESS -->
+    <section class="section" data-label="Our Process">
+      <div class="eyebrow center">How It Works</div>
+      <h1 class="heading center">From overwhelmed<br>to <em>organized.</em></h1>
+      <div class="process-list">
+        <div class="process-step">
+          <div class="process-num">01</div>
+          <div><div class="process-title">Consult</div><div class="process-desc">A designer visits your home to discuss the space and your goals — and takes every measurement, so you don't have to.</div></div>
+        </div>
+        <div class="process-step">
+          <div class="process-num">02</div>
+          <div><div class="process-title">Design</div><div class="process-desc">A solution tailored to your life, needs, style, and budget — you'll see a full 360° view of the design before anything is built.</div></div>
+        </div>
+        <div class="process-step">
+          <div class="process-num">03</div>
+          <div><div class="process-title">Prepare</div><div class="process-desc">Together, we build a plan that takes the stress out of getting your space ready for installation day.</div></div>
+        </div>
+        <div class="process-step">
+          <div class="process-num">04</div>
+          <div><div class="process-title">Install</div><div class="process-desc">Every cabinet and closet rod installed with care, so it's done right the first time.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 APPOINTMENT -->
+    <section class="section" data-label="Your Appointment">
+      <div class="maxw center">
+        <div class="eyebrow">What Happens at an Appointment</div>
+        <h1 class="heading">Here's what<br>to <em>expect.</em></h1>
+      </div>
+      <div class="check-list">
+        <div class="check-item"><span class="mark">✓</span>A dedicated designer who listens to you first</div>
+        <div class="check-item"><span class="mark">✓</span>Expert guidance and ideas for your specific problems</div>
+        <div class="check-item"><span class="mark">✓</span>A review of color and finish options</div>
+        <div class="check-item"><span class="mark">✓</span>Photos of other Houston projects we've completed</div>
+        <div class="check-item"><span class="mark">✓</span>Exact measurements, taken by a professional</div>
+      </div>
+    </section>
+
+    <!-- 07 FAQ -->
+    <section class="section" data-label="FAQ">
+      <div class="maxw center" style="margin-bottom:6px;">
+        <div class="eyebrow">Questions We Hear Often</div>
+        <h1 class="heading">Have questions?<br>We have <em>answers.</em></h1>
+      </div>
+      <div class="faq-list">
+        <div><div class="faq-q">What is a "custom closet," and why get one?</div><div class="faq-a">A custom closet is designed around your space, your belongings, and your habits — not a generic rod-and-shelf setup. Most closets are built with minimal thought, which leaves space under-used and clutter piling up; a custom system uses every inch to fit how you actually live.</div></div>
+        <div><div class="faq-q">How much does a custom closet cost?</div><div class="faq-a">It depends on the size of the space, how it's configured, materials, and how many custom features you add. Smaller closets typically start around $5,000 — the general rule is more product means more cost.</div></div>
+        <div><div class="faq-q">Can I see my design before I commit?</div><div class="faq-a">Yes. Every project includes a 3D rendering, and our Envision augmented-reality tool lets you walk through your new closet in its finished state before anything is built.</div></div>
+        <div><div class="faq-q">What sets Inspired Closets apart?</div><div class="faq-a">Free in-home consultations, one-on-one designer collaboration, a process built around listening first, USA-manufactured furniture-grade materials, and Envision AR so nothing is a surprise on install day.</div></div>
+      </div>
+    </section>
+
+    <!-- 08 REVIEWS -->
+    <section class="section" data-label="Client Reviews">
+      <div class="maxw center" style="margin-bottom:6px;">
+        <div class="eyebrow">What Houston Clients Say</div>
+        <h1 class="heading">Real homes,<br><em>real reviews.</em></h1>
+      </div>
+      <div class="review-grid">
+        <div class="review-card"><div class="review-quote-mark">"</div><div class="review-text">Every step, from measuring to layout to finish selection, matched exactly what was described going in.</div><div class="review-name">— Shanna</div></div>
+        <div class="review-card"><div class="review-quote-mark">"</div><div class="review-text">The designer worked directly with our builder to plan the closet around the exact shape of our space.</div><div class="review-name">— Nicki</div></div>
+        <div class="review-card"><div class="review-quote-mark">"</div><div class="review-text">The team helped turn a vague idea into a design that actually organizes our life.</div><div class="review-name">— Haidee</div></div>
+        <div class="review-card"><div class="review-quote-mark">"</div><div class="review-text">We just weighed in on what we liked — the four-step process made every decision easy.</div><div class="review-name">— Erik</div></div>
+        <div class="review-card"><div class="review-quote-mark">"</div><div class="review-text">They got to know us and our needs, then took the whole project off our plate.</div><div class="review-name">— Sue</div></div>
+      </div>
+    </section>
+
+    <!-- 09 NEXT STEPS -->
+    <section class="section cta" data-label="Next Steps">
+      <div class="eyebrow" id="ctaEyebrow">Ready When You Are</div>
+      <h1 class="cta-title">Let's design your <em>next space.</em></h1>
+      <p class="cta-sub" id="ctaSub">Schedule a free in-home consultation, or stop by the Houston showroom to see finishes, open drawers, and meet the team.</p>
+      <div class="cta-actions">
+        <a class="btn btn-solid" href="tel:281-942-7003">Call 281-942-7003</a>
+        <a class="btn btn-outline" href="#">Schedule a Consultation</a>
+      </div>
+      <div class="cta-contact">
+        <strong>7613 Katy Freeway, Houston, TX 77024</strong><br>
+        281-942-7003 · info@inspiredclosetshtx.com<br>
+        Mon–Fri 10:00am–6:00pm · Sat 10:00am–2:00pm
+      </div>
+      <p class="cta-areas">Proudly serving <strong>Bellaire · Cypress · Midtown · The Woodlands · Sugar Land · Pearland · The Heights · West University</strong> and surrounding Greater Houston.</p>
+    </section>
+
+  </div>
+
+  <div class="bottombar">
+    <button class="nav-btn" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>Prev</button>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div style="display:flex;align-items:center;">
+    <button class="nav-btn" id="nextBtn">Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="present-btn" id="sizeBtn" title="Cycle presentation size">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span id="sizeLabel">Normal</span>
+    </button>
+    <button class="present-btn" id="fullscreenBtn" title="Toggle fullscreen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Full Screen
+    </button>
+    </div>
+  </div>
+
+  <!-- DESIGNER / PRESENTER PICKER -->
+  <div class="dp-overlay" id="dpOverlay">
+    <div class="dp-panel">
+      <div class="dp-eyebrow">Before we start</div>
+      <div class="dp-title">Who's presenting today?</div>
+      <div class="dp-sub">Pick your name and this presentation will personalize the greeting and your team card. Your selection is remembered on this device — use the gear icon up top to change it later.</div>
+      <div class="dp-cards" id="dpCards"></div>
+      <div class="dp-actions">
+        <button class="dp-btn" id="dpSkip">Skip for now</button>
+        <button class="dp-btn dp-confirm" id="dpConfirm" disabled>Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OUR SPACES — category detail / gallery -->
+  <div class="space-overlay" id="spaceOverlay">
+    <div class="space-panel" id="spacePanel" role="dialog" aria-modal="true" aria-labelledby="spacePanelTitle">
+      <button class="space-panel-close" id="spaceClose" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/></svg>
+      </button>
+      <div class="space-panel-head">
+        <div class="space-panel-eyebrow">Our Spaces</div>
+        <h2 class="space-panel-title" id="spacePanelTitle"></h2>
+        <p class="space-panel-intro" id="spacePanelIntro"></p>
+      </div>
+      <div class="space-gallery" id="spaceGallery">
+        <div class="space-gallery-track" id="spaceGalleryTrack"></div>
+        <div class="space-gallery-dots" id="spaceGalleryDots"></div>
+        <button class="space-gallery-nav space-gallery-prev" id="spacePrev" aria-label="Imagen anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="space-gallery-nav space-gallery-next" id="spaceNext" aria-label="Imagen siguiente">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="space-panel-foot">
+        <button class="space-panel-back" id="spaceBack">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Volver a Our Spaces
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ---- REAL Houston team, from inspiredclosets.com/locations/houston/story/ ----
+  // Bios paraphrased in our own words (not copied verbatim from the site).
+  // Photo URLs are hotlinked directly from inspiredclosets.com's own media
+  // storage (their real team photos, from /locations/houston/story/). If a
+  // URL ever breaks, onerror below falls back to the initials placeholder.
+  const TEAM = [
+    { id: 'ronald', name: 'Ronald Perez', role: 'Business Operations', initials: 'RP',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2026/02/10141155/f-2-19-23634480_tgU13OP6_Ronald_Perez_480x480_acf_cropped.jpg',
+      desc: '20+ years building businesses across hospitality, telecom, and tech — now bringing that same operational eye to Houston.', presenter: true },
+    { id: 'rosa', name: 'Rosa Perez', role: 'Finance Director', initials: 'RP',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2026/02/10141341/f-2-19-23634480_DlUVUT93_Rosa_Perez_480x480_acf_cropped.jpg',
+      desc: '25+ years in procurement and operations, keeping every project on time, on budget, and beyond expectations.', presenter: true },
+    { id: 'pati', name: 'Patricia "Pati" Juarez', role: 'Head Designer', initials: 'PJ',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/11/19105857/Pati-min-scaled_480x480_acf_cropped_480x480_acf_cropped.jpg',
+      desc: 'Nearly 20 years in hospitality leadership plus five in real estate, now designing walk-ins that balance style with everyday practicality.', presenter: true },
+    { id: 'merary', name: 'Merary Torres', role: 'Designer', initials: 'MT',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2026/07/28234534/Merary_Torres_Houston_Headshot_480x480_acf_cropped.jpg',
+      desc: 'Houston native with a decade in interior design, space planning, and cabinet design — loves seeing a client\u2019s vision come to life.', presenter: true },
+    { id: 'cassandra', name: 'Cassandra Perez', role: 'Showroom Coordinator', initials: 'CP',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/11/19105958/cassandra-min-scaled_480x480_acf_cropped_480x480_acf_cropped.jpg',
+      desc: 'Houston native with a global perspective on design, ready to help you get started in the showroom.', presenter: true },
+    { id: 'juan', name: 'Juan Juarez', role: 'Operations Manager', initials: 'JJ',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/11/19105912/Juan-min-scaled_480x480_acf_cropped_480x480_acf_cropped.jpg',
+      desc: 'Former Marine Corps logistics — brings that same precision to making sure every install runs on schedule.', presenter: true }
+  ];
+
+  const STORAGE_KEY = 'ich_presenter_v1';
+  function getSavedPresenter() {
+    try {
+      const id = localStorage.getItem(STORAGE_KEY);
+      return TEAM.find(t => t.id === id) || null;
+    } catch (e) { return null; }
+  }
+  function savePresenter(t) {
+    try { localStorage.setItem(STORAGE_KEY, t ? t.id : ''); } catch (e) {}
+  }
+
+  // ---- Render team grid (Meet the Team section) ----
+  const teamGrid = document.getElementById('teamGrid');
+  function renderTeamGrid(currentId) {
+    teamGrid.innerHTML = TEAM.map(t => `
+      <div class="team-card${t.id === currentId ? ' is-you' : ''}" data-id="${t.id}">
+        ${t.id === currentId ? '<div class="team-badge">Presenting Today</div>' : ''}
+        <div class="team-photo-ph" style="${t.photo ? 'padding:0;border-style:solid;' : ''}">${t.photo ? `<img src="${t.photo}" alt="${t.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentElement.style.padding='';this.parentElement.style.borderStyle='dashed';this.outerHTML='${t.initials}';">` : t.initials}</div>
+        <div class="team-name">${t.name}</div>
+        <div class="team-role">${t.role}</div>
+        <div class="team-desc">${t.desc}</div>
+      </div>
+    `).join('');
+  }
+  renderTeamGrid(null);
+
+  // ---- Designer picker overlay ----
+  const dpOverlay = document.getElementById('dpOverlay');
+  const dpCards = document.getElementById('dpCards');
+  const dpConfirm = document.getElementById('dpConfirm');
+  const dpSkip = document.getElementById('dpSkip');
+  const dpGear = document.getElementById('dpGear');
+  let staged = null;
+
+  function renderDpCards(currentId) {
+    const presenters = TEAM.filter(t => t.presenter);
+    dpCards.innerHTML = presenters.map(t => `
+      <div class="dp-card${t.id === currentId ? ' selected' : ''}" data-id="${t.id}">
+        <div class="dp-photo-ph" style="${t.photo ? 'padding:0;border-style:solid;' : ''}">${t.photo ? `<img src="${t.photo}" alt="${t.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.parentElement.style.padding='';this.parentElement.style.borderStyle='dashed';this.outerHTML='${t.initials}';">` : t.initials}</div>
+        <div class="dp-name">${t.name}</div>
+        <div class="dp-role">${t.role}</div>
+      </div>
+    `).join('');
+    Array.from(dpCards.children).forEach(card => {
+      card.addEventListener('click', () => {
+        Array.from(dpCards.children).forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        staged = TEAM.find(t => t.id === card.dataset.id);
+        dpConfirm.disabled = false;
+      });
+    });
+  }
+
+  function openPicker() {
+    const current = getSavedPresenter();
+    staged = current;
+    renderDpCards(current ? current.id : null);
+    dpConfirm.disabled = !current;
+    dpOverlay.classList.add('open');
+  }
+  function closePicker() { dpOverlay.classList.remove('open'); }
+
+  function applyPersonalization(presenter) {
+    const greetingEl = document.getElementById('welcomeGreeting');
+    const ctaSub = document.getElementById('ctaSub');
+    if (presenter) {
+      const first = presenter.name.split(' ')[0].replace(/"/g, '');
+      greetingEl.innerHTML = `Hi, I&rsquo;m <strong>${first}</strong> — glad you&rsquo;re here.`;
+      ctaSub.textContent = `Ask ${first} about scheduling, or stop by the Houston showroom to see finishes, open drawers, and meet the rest of the team.`;
+    } else {
+      greetingEl.innerHTML = '';
+      ctaSub.textContent = 'Schedule a free in-home consultation, or stop by the Houston showroom to see finishes, open drawers, and meet the team.';
+    }
+    renderTeamGrid(presenter ? presenter.id : null);
+  }
+
+  dpSkip.addEventListener('click', () => { closePicker(); });
+  dpConfirm.addEventListener('click', () => {
+    if (staged) { savePresenter(staged); applyPersonalization(staged); }
+    closePicker();
+  });
+  dpGear.addEventListener('click', openPicker);
+  dpOverlay.addEventListener('click', (e) => { if (e.target === dpOverlay) closePicker(); });
+
+  const savedPresenter = getSavedPresenter();
+  if (savedPresenter) applyPersonalization(savedPresenter);
+  setTimeout(openPicker, 500);
+
+  // ---- OUR SPACES ----
+  // Preview V1.1: Closets y Pantry completamente implementados con imágenes
+  // reales hotlinkeadas desde asset-map.csv (S3 del propio cliente). Las
+  // demás 6 categorías quedan como tarjeta visual "Próximamente" — se
+  // replican con el mismo patrón una vez validada esta preview.
+  const SPACES = [
+    {
+      id: 'closets', title: 'Closets', live: true,
+      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27084219/IC_00529.tif-crop-1.jpg',
+      intro: 'Almacenamiento diseñado alrededor del guardarropa, las rutinas y la estética del hogar — desde boutique hasta walk-in, con cajones de cierre suave y organización a medida.',
+      images: [
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27084219/IC_00529.tif-crop-1.jpg', label: 'Boutique', desc: 'Closet boutique; exhibición y organización elevada del guardarropa.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091738/IC_PalmBeach_011-crop-400x400-1.jpg', label: 'Reach-In', desc: 'Closet compacto con almacenamiento personalizado.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27092313/D_1481-400x400-1.jpg', label: 'Walk-In', desc: 'Walk-in closet con zonas funcionales y personalización.' }
+      ]
+    },
+    {
+      id: 'pantry', title: 'Pantry', live: true,
+      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091139/OH_692-400x400-1.jpg',
+      intro: 'Gabinetes, cestas y estantes ajustables pensados para maximizar el espacio y facilitar la preparación y el entretenimiento en la cocina.',
+      images: [
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091139/OH_692-400x400-1.jpg', label: 'Galley', desc: 'Despensa tipo galley con almacenamiento personalizado.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/06153456/reach-in-pantry.jpg', label: 'Reach-In', desc: 'Organización que maximiza una despensa compacta.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/07125420/IC_Jacksonville_018.jpg-crop-1.jpeg', label: 'Walk-In', desc: 'Despensa walk-in con acceso y zonas de almacenamiento.' }
+      ]
+    },
+    { id: 'laundry', title: 'Laundry Room', live: false },
+    { id: 'garage', title: 'Garage', live: false },
+    { id: 'entryway', title: 'Entryway', live: false },
+    { id: 'home-office', title: 'Home Office', live: false },
+    { id: 'murphy-bed', title: 'Murphy Bed', live: false },
+    { id: 'entertainment', title: 'Entertainment', live: false }
+  ];
+
+  const spacesGrid = document.getElementById('spacesGrid');
+  spacesGrid.innerHTML = SPACES.map(s => {
+    if (s.live) {
+      return `
+        <button class="space-card is-live" data-space="${s.id}" type="button">
+          <div class="ph"><img src="${s.cover}" alt="${s.title}" loading="lazy" onerror="this.parentElement.outerHTML='&lt;div class=&quot;ph&quot;&gt;Photo: ${s.title}&lt;/div&gt;';"></div>
+          <div class="space-card-body">
+            <div class="space-card-title">${s.title}</div>
+            <span class="space-card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </button>`;
+    }
+    return `
+      <div class="space-card">
+        <div class="ph">Photo: ${s.title.toLowerCase()}<small>swap for &lt;img&gt;</small></div>
+        <div class="space-card-body">
+          <div class="space-card-title">${s.title}</div>
+          <span class="space-card-soon">Próximamente</span>
+        </div>
+      </div>`;
+  }).join('');
+
+  const spaceOverlay = document.getElementById('spaceOverlay');
+  const spacePanelTitle = document.getElementById('spacePanelTitle');
+  const spacePanelIntro = document.getElementById('spacePanelIntro');
+  const spaceGalleryTrack = document.getElementById('spaceGalleryTrack');
+  const spaceGalleryDots = document.getElementById('spaceGalleryDots');
+  const spacePrev = document.getElementById('spacePrev');
+  const spaceNext = document.getElementById('spaceNext');
+  const spaceClose = document.getElementById('spaceClose');
+  const spaceBack = document.getElementById('spaceBack');
+  let activeSpace = null;
+  let activeImgIndex = 0;
+  let lastFocusedEl = null;
+
+  function renderGallery() {
+    const imgs = activeSpace.images;
+    spaceGalleryTrack.innerHTML = imgs.map((img, i) => `
+      <div class="space-gallery-slide${i === activeImgIndex ? ' active' : ''}">
+        <img src="${img.src}" alt="${activeSpace.title} — ${img.label}" loading="lazy">
+        <div class="space-gallery-caption"><strong>${img.label}</strong>${img.desc}</div>
+      </div>
+    `).join('');
+    spaceGalleryDots.innerHTML = imgs.map((_, i) => `<button class="space-gallery-dot${i === activeImgIndex ? ' active' : ''}" data-i="${i}" aria-label="Ir a imagen ${i + 1}"></button>`).join('');
+    Array.from(spaceGalleryDots.children).forEach(dot => {
+      dot.addEventListener('click', () => { activeImgIndex = Number(dot.dataset.i); renderGallery(); });
+    });
+  }
+
+  function galleryStep(dir) {
+    if (!activeSpace) return;
+    const len = activeSpace.images.length;
+    activeImgIndex = (activeImgIndex + dir + len) % len;
+    renderGallery();
+  }
+
+  function openSpace(id, triggerEl) {
+    const space = SPACES.find(s => s.id === id && s.live);
+    if (!space) return;
+    activeSpace = space;
+    activeImgIndex = 0;
+    lastFocusedEl = triggerEl || document.activeElement;
+    spacePanelTitle.textContent = space.title;
+    spacePanelIntro.textContent = space.intro;
+    renderGallery();
+    spaceOverlay.classList.add('open');
+    spaceClose.focus();
+  }
+
+  function closeSpace() {
+    spaceOverlay.classList.remove('open');
+    activeSpace = null;
+    if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') lastFocusedEl.focus();
+  }
+
+  spacesGrid.addEventListener('click', (e) => {
+    const btn = e.target.closest('.space-card.is-live');
+    if (btn) openSpace(btn.dataset.space, btn);
+  });
+  spaceClose.addEventListener('click', closeSpace);
+  spaceBack.addEventListener('click', closeSpace);
+  spacePrev.addEventListener('click', () => galleryStep(-1));
+  spaceNext.addEventListener('click', () => galleryStep(1));
+  spaceOverlay.addEventListener('click', (e) => { if (e.target === spaceOverlay) closeSpace(); });
+
+  // Basic swipe support for tablet/mobile
+  let touchStartX = null;
+  const spaceGalleryEl = document.getElementById('spaceGallery');
+  spaceGalleryEl.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  spaceGalleryEl.addEventListener('touchend', (e) => {
+    if (touchStartX === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) galleryStep(dx > 0 ? -1 : 1);
+    touchStartX = null;
+  }, { passive: true });
+
+  // ---- Section navigation ----
+  const sections = Array.from(document.querySelectorAll('.section'));
+  const dotsWrap = document.getElementById('indexDots');
+  const chapterNum = document.getElementById('chapterNum');
+  const chapterLabel = document.getElementById('chapterLabel');
+  const progressFill = document.getElementById('progressFill');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  let current = 0;
+
+  sections.forEach((s, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'index-dot' + (i === 0 ? ' active' : '');
+    dot.innerHTML = '<span class="tip">' + s.dataset.label + '</span>';
+    dot.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(dot);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function goTo(i) {
+    if (i < 0 || i >= sections.length) return;
+    sections[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = i;
+    sections[current].classList.add('active');
+    dots[current].classList.add('active');
+    chapterNum.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(sections.length).padStart(2, '0');
+    chapterLabel.textContent = sections[current].dataset.label;
+    progressFill.style.transform = 'scaleX(' + ((current + 1) / sections.length) + ')';
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === sections.length - 1;
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+  document.addEventListener('keydown', (e) => {
+    if (spaceOverlay.classList.contains('open')) {
+      if (e.key === 'Escape') closeSpace();
+      if (e.key === 'ArrowRight') galleryStep(1);
+      if (e.key === 'ArrowLeft') galleryStep(-1);
+      return;
+    }
+    if (dpOverlay.classList.contains('open')) return;
+    if (e.key === 'ArrowRight') goTo(current + 1);
+    if (e.key === 'ArrowLeft') goTo(current - 1);
+  });
+
+  // ---- Presentation size (zoom) + fullscreen ----
+  const appRoot = document.getElementById('appRoot');
+  const sizeBtn = document.getElementById('sizeBtn');
+  const sizeLabel = document.getElementById('sizeLabel');
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+  const SIZES = [
+    { cls: '', label: 'Normal' },
+    { cls: 'scale-115', label: 'Large' },
+    { cls: 'scale-130', label: 'X-Large' }
+  ];
+  let sizeIndex = 0;
+  sizeBtn.addEventListener('click', () => {
+    sizeIndex = (sizeIndex + 1) % SIZES.length;
+    appRoot.classList.remove('scale-115', 'scale-130');
+    if (SIZES[sizeIndex].cls) appRoot.classList.add(SIZES[sizeIndex].cls);
+    sizeLabel.textContent = SIZES[sizeIndex].label;
+  });
+  fullscreenBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen();
+    }
+  });
+
+  goTo(0);
+</script>
+
+</body>
+</html>
