@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Inspired Closets Houston — Preview V1.1</title>
+<title>Inspired Closets Houston — Preview V2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Caveat:wght@600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
@@ -54,6 +54,25 @@
   tiene un onerror que vuelve automáticamente al placeholder con iniciales.
   Sigue sin haber fotos de proyectos/espacios reales de Houston (closets,
   pantries, etc.) — esas secciones siguen con placeholder punteado.
+
+  v4 — TODAS LAS 8 CATEGORÍAS DE "OUR SPACES" (2026-08-26):
+  - Antes solo Closets y Pantry estaban "live" (con galería); Laundry Room,
+    Garage, Entryway, Home Office, Murphy Bed y Entertainment quedaban en
+    "Próximamente". Ahora las 8 tienen galería completa (3 fotos c/u),
+    usando el content-pack: inspired-closets-houston-content-pack/.
+  - Se detectó y corrigió un problema serio en el content-pack original:
+    21 de sus 36 imágenes eran copias byte-idénticas mal etiquetadas (ej.
+    un mismo retrato figuraba como 4 miembros de equipo distintos; una
+    misma foto de "consulta" se repetía en closet/garage/pantry/laundry).
+    Se volvieron a descargar las 36 desde las URLs source_asset del CSV y
+    se verificaron por hash — ver notas-de-calidad.md dentro del pack.
+  - Todas las imágenes (equipo, showroom, y las 8 categorías de espacios)
+    ahora se sirven en LOCAL desde el content-pack en vez de hotlink al S3
+    del cliente, para no depender de que esa URL externa siga viva. El
+    onerror con fallback a placeholder/iniciales se mantiene igual.
+  - Precios y días de instalación por categoría (ejemplos publicados por
+    el sitio, no cotización) se sumaron a la intro de cada categoría,
+    tomados de content/brief-presentacion-es.md.
 -->
 <style>
   :root {
@@ -460,7 +479,7 @@
           <div class="story-quote">This isn't just about organization. It's about giving you a home that helps you live better.</div>
           <div class="story-signoff"><strong>Ronald &amp; Rosa Perez</strong>Owner &amp; President, Inspired Closets Houston</div>
         </div>
-        <div class="ph story-photo" style="padding:0;border-style:solid;overflow:hidden;"><img src="https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2023/03/02103514/showroom.jpg" alt="Inspired Closets Houston showroom" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.outerHTML='&lt;div class=&quot;ph story-photo&quot;&gt;Photo: Ronald &amp; Rosa Perez, or the Houston showroom&lt;small&gt;Replace this block with an &amp;lt;img&amp;gt;&lt;/small&gt;&lt;/div&gt;';"></div>
+        <div class="ph story-photo" style="padding:0;border-style:solid;overflow:hidden;"><img src="inspired-closets-houston-content-pack/images/overview/showroom.jpg" alt="Inspired Closets Houston showroom" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.outerHTML='&lt;div class=&quot;ph story-photo&quot;&gt;Photo: Ronald &amp; Rosa Perez, or the Houston showroom&lt;small&gt;Replace this block with an &amp;lt;img&amp;gt;&lt;/small&gt;&lt;/div&gt;';"></div>
       </div>
     </section>
 
@@ -642,22 +661,22 @@
   // URL ever breaks, onerror below falls back to the initials placeholder.
   const TEAM = [
     { id: 'ronald', name: 'Ronald Perez', role: 'Business Operations', initials: 'RP',
-      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2026/02/10141155/f-2-19-23634480_tgU13OP6_Ronald_Perez_480x480_acf_cropped.jpg',
+      photo: 'inspired-closets-houston-content-pack/images/team/ronald-perez.jpg',
       desc: '20+ years building businesses across hospitality, telecom, and tech — now bringing that same operational eye to Houston.', presenter: true },
     { id: 'rosa', name: 'Rosa Perez', role: 'Finance Director', initials: 'RP',
-      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2026/02/10141341/f-2-19-23634480_DlUVUT93_Rosa_Perez_480x480_acf_cropped.jpg',
+      photo: 'inspired-closets-houston-content-pack/images/team/rosa-perez.jpg',
       desc: '25+ years in procurement and operations, keeping every project on time, on budget, and beyond expectations.', presenter: true },
     { id: 'pati', name: 'Patricia "Pati" Juarez', role: 'Head Designer', initials: 'PJ',
-      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/11/19105857/Pati-min-scaled_480x480_acf_cropped_480x480_acf_cropped.jpg',
+      photo: 'inspired-closets-houston-content-pack/images/team/pati-juarez.jpg',
       desc: 'Nearly 20 years in hospitality leadership plus five in real estate, now designing walk-ins that balance style with everyday practicality.', presenter: true },
     { id: 'merary', name: 'Merary Torres', role: 'Designer', initials: 'MT',
-      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2026/07/28234534/Merary_Torres_Houston_Headshot_480x480_acf_cropped.jpg',
+      photo: 'inspired-closets-houston-content-pack/images/team/merary-torres.jpg',
       desc: 'Houston native with a decade in interior design, space planning, and cabinet design — loves seeing a client\u2019s vision come to life.', presenter: true },
     { id: 'cassandra', name: 'Cassandra Perez', role: 'Showroom Coordinator', initials: 'CP',
-      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/11/19105958/cassandra-min-scaled_480x480_acf_cropped_480x480_acf_cropped.jpg',
+      photo: 'inspired-closets-houston-content-pack/images/team/cassandra-perez.jpg',
       desc: 'Houston native with a global perspective on design, ready to help you get started in the showroom.', presenter: true },
     { id: 'juan', name: 'Juan Juarez', role: 'Operations Manager', initials: 'JJ',
-      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/11/19105912/Juan-min-scaled_480x480_acf_cropped_480x480_acf_cropped.jpg',
+      photo: 'inspired-closets-houston-content-pack/images/team/juan-juarez.jpg',
       desc: 'Former Marine Corps logistics — brings that same precision to making sure every install runs on schedule.', presenter: true }
   ];
 
@@ -750,37 +769,92 @@
   setTimeout(openPicker, 500);
 
   // ---- OUR SPACES ----
-  // Preview V1.1: Closets y Pantry completamente implementados con imágenes
-  // reales hotlinkeadas desde asset-map.csv (S3 del propio cliente). Las
-  // demás 6 categorías quedan como tarjeta visual "Próximamente" — se
-  // replican con el mismo patrón una vez validada esta preview.
+  // v4: las 8 categorías completamente implementadas con imágenes locales
+  // verificadas del content-pack (inspired-closets-houston-content-pack/),
+  // 3 fotos por categoría + precio/tiempo de instalación de referencia
+  // tomados de content/brief-presentacion-es.md.
+  const IMG = 'inspired-closets-houston-content-pack/images/';
   const SPACES = [
     {
       id: 'closets', title: 'Closets', live: true,
-      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27084219/IC_00529.tif-crop-1.jpg',
-      intro: 'Almacenamiento diseñado alrededor del guardarropa, las rutinas y la estética del hogar — desde boutique hasta walk-in, con cajones de cierre suave y organización a medida.',
+      cover: IMG + 'services/closet/boutique.jpg',
+      intro: 'Almacenamiento diseñado alrededor del guardarropa, las rutinas y la estética del hogar — desde boutique hasta walk-in, con cajones de cierre suave, doble colgado, zapateros, bandejas para joyas e iluminación personalizada. Proyectos desde ~$2,000 hasta más de $20,000, instalación de 1 a 5 días.',
       images: [
-        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27084219/IC_00529.tif-crop-1.jpg', label: 'Boutique', desc: 'Closet boutique; exhibición y organización elevada del guardarropa.' },
-        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091738/IC_PalmBeach_011-crop-400x400-1.jpg', label: 'Reach-In', desc: 'Closet compacto con almacenamiento personalizado.' },
-        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27092313/D_1481-400x400-1.jpg', label: 'Walk-In', desc: 'Walk-in closet con zonas funcionales y personalización.' }
+        { src: IMG + 'services/closet/boutique.jpg', label: 'Boutique', desc: 'Closet boutique; exhibición y organización elevada del guardarropa.' },
+        { src: IMG + 'services/closet/reach-in.jpg', label: 'Reach-In', desc: 'Closet compacto con almacenamiento personalizado.' },
+        { src: IMG + 'services/closet/walk-in.jpg', label: 'Walk-In', desc: 'Walk-in closet con zonas funcionales y personalización.' }
       ]
     },
     {
       id: 'pantry', title: 'Pantry', live: true,
-      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091139/OH_692-400x400-1.jpg',
-      intro: 'Gabinetes, cestas y estantes ajustables pensados para maximizar el espacio y facilitar la preparación y el entretenimiento en la cocina.',
+      cover: IMG + 'services/pantry/galley.jpg',
+      intro: 'Gabinetes, cestas, estantes ajustables y zonas para pequeños electrodomésticos pensados para maximizar el espacio y facilitar la preparación y el entretenimiento. Aproximadamente $2,000–$16,000, instalación de 1 a 3 días.',
       images: [
-        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091139/OH_692-400x400-1.jpg', label: 'Galley', desc: 'Despensa tipo galley con almacenamiento personalizado.' },
-        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/06153456/reach-in-pantry.jpg', label: 'Reach-In', desc: 'Organización que maximiza una despensa compacta.' },
-        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/07125420/IC_Jacksonville_018.jpg-crop-1.jpeg', label: 'Walk-In', desc: 'Despensa walk-in con acceso y zonas de almacenamiento.' }
+        { src: IMG + 'services/pantry/galley.jpg', label: 'Galley', desc: 'Despensa tipo galley con almacenamiento personalizado.' },
+        { src: IMG + 'services/pantry/reach-in.jpg', label: 'Reach-In', desc: 'Organización que maximiza una despensa compacta.' },
+        { src: IMG + 'services/pantry/walk-in.jpeg', label: 'Walk-In', desc: 'Despensa walk-in con acceso y zonas de almacenamiento.' }
       ]
     },
-    { id: 'laundry', title: 'Laundry Room', live: false },
-    { id: 'garage', title: 'Garage', live: false },
-    { id: 'entryway', title: 'Entryway', live: false },
-    { id: 'home-office', title: 'Home Office', live: false },
-    { id: 'murphy-bed', title: 'Murphy Bed', live: false },
-    { id: 'entertainment', title: 'Entertainment', live: false }
+    {
+      id: 'laundry', title: 'Laundry Room', live: true,
+      cover: IMG + 'services/laundry-room/dual-space.jpg',
+      intro: 'Espacios para colgar y secar, cestas integradas, superficies de trabajo y almacenamiento para productos de limpieza, pensados para reducir el desorden. Aproximadamente $1,000–$15,000, instalación de 1 a 3 días.',
+      images: [
+        { src: IMG + 'services/laundry-room/dual-space.jpg', label: 'Dual Space', desc: 'Lavandería combinada con otro uso del hogar.' },
+        { src: IMG + 'services/laundry-room/galley.jpeg', label: 'Galley', desc: 'Lavandería lineal con almacenamiento y superficies de trabajo.' },
+        { src: IMG + 'services/laundry-room/open-room.jpeg', label: 'Open Room', desc: 'Lavandería abierta con zonas funcionales.' }
+      ]
+    },
+    {
+      id: 'garage', title: 'Garage', live: true,
+      cover: IMG + 'services/garage/cabinets.jpg',
+      intro: 'Sistemas resistentes y ordenados que aprovechan el garaje para herramientas, equipos deportivos, proyectos y almacenamiento estacional: gabinetes con puertas, calzado, paneles slatwall, ganchos, cestas y barras magnéticas.',
+      images: [
+        { src: IMG + 'services/garage/cabinets.jpg', label: 'Cabinets With Doors', desc: 'Gabinetes para objetos altos con puertas batientes o corredizas.' },
+        { src: IMG + 'services/garage/shoe-storage.jpg', label: 'Shoe Storage', desc: 'Almacenamiento de calzado personalizable.' },
+        { src: IMG + 'services/garage/slatwall.jpg', label: 'Slatwall and Accessories', desc: 'Paneles, ganchos, cestas y barras para herramientas.' }
+      ]
+    },
+    {
+      id: 'home-office', title: 'Home Office', live: true,
+      cover: IMG + 'services/home-office/desk-and-cabinets.jpg',
+      intro: 'Escritorios integrados, cajones, estantes decorativos, bibliotecas y estaciones para manualidades — pensado para concentración, orden y usos múltiples. Aproximadamente $1,000–$15,000, instalación de 1 a 2 días.',
+      images: [
+        { src: IMG + 'services/home-office/desk-and-cabinets.jpg', label: 'Desk and Cabinets', desc: 'Escritorio integrado con gabinetes para trabajar con orden.' },
+        { src: IMG + 'services/home-office/dual-space.jpeg', label: 'Dual Space', desc: 'Oficina integrada en un espacio de doble uso.' },
+        { src: IMG + 'services/home-office/library-wall.jpg', label: 'Library Wall', desc: 'Biblioteca mural y almacenamiento empotrado.' }
+      ]
+    },
+    {
+      id: 'murphy-bed', title: 'Murphy Bed', live: true,
+      cover: IMG + 'services/murphy-bed/queen-bed.jpg',
+      intro: 'Soluciones de descanso que se integran en oficinas, bibliotecas, salas de juego o living, para recibir huéspedes sin dedicar una habitación exclusivamente a eso. Aproximadamente $7,000–$15,000, instalación de 1 a 2 días.',
+      images: [
+        { src: IMG + 'services/murphy-bed/dual-space.jpg', label: 'Dual Space', desc: 'Cama rebatible integrada en una habitación multifunción.' },
+        { src: IMG + 'services/murphy-bed/queen-bed.jpg', label: 'Queen Bed', desc: 'Cama queen rebatible con almacenamiento integrado.' },
+        { src: IMG + 'services/murphy-bed/twin-bed.jpg', label: 'Twin Bed', desc: 'Cama twin rebatible para aprovechar el espacio.' }
+      ]
+    },
+    {
+      id: 'entryway', title: 'Entryway', live: true,
+      cover: IMG + 'services/entryway/entryway.jpg',
+      intro: 'Bancos, gabinetes, estantes, cubículos y almacenamiento para calzado, bolsos y equipos deportivos, diseñados para ordenar zonas de alto tránsito. Aproximadamente $1,000–$15,000, instalación de 1 a 2 días.',
+      images: [
+        { src: IMG + 'services/entryway/dual-space.jpg', label: 'Dual Space', desc: 'Entrada combinada con otra función del hogar.' },
+        { src: IMG + 'services/entryway/entryway.jpg', label: 'Entryway', desc: 'Almacenamiento para una zona de entrada de alto tránsito.' },
+        { src: IMG + 'services/entryway/foyer.jpg', label: 'Foyer', desc: 'Solución de almacenamiento para foyer.' }
+      ]
+    },
+    {
+      id: 'entertainment', title: 'Entertainment', live: true,
+      cover: IMG + 'services/entertainment/built-ins.jpg',
+      intro: 'Gabinetes empotrados, estantes flotantes y almacenamiento personalizado para salas familiares, cine, trabajo y entretenimiento. Aproximadamente $1,000–$20,000, instalación de 1 a 3 días.',
+      images: [
+        { src: IMG + 'services/entertainment/built-ins.jpg', label: 'Built-Ins', desc: 'Centro de entretenimiento empotrado y personalizado.' },
+        { src: IMG + 'services/entertainment/dual-space.jpg', label: 'Dual Space', desc: 'Espacio compartido para trabajo y entretenimiento.' },
+        { src: IMG + 'services/entertainment/media-center.jpg', label: 'Media Center', desc: 'Gabinetes y estantes para medios y objetos personales.' }
+      ]
+    }
   ];
 
   const spacesGrid = document.getElementById('spacesGrid');
