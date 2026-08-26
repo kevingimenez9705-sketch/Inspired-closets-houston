@@ -70,6 +70,17 @@
     ahora se sirven en LOCAL desde el content-pack en vez de hotlink al S3
     del cliente, para no depender de que esa URL externa siga viva. El
     onerror con fallback a placeholder/iniciales se mantiene igual.
+
+  v5 — VUELTA A HOTLINK DIRECTO (2026-08-26):
+  Por pedido explícito: las 39 imágenes (6 equipo + 1 showroom + 32 de
+  Our Spaces) vuelven a servirse directo desde
+  inspiredclosetsmediafiles.s3.amazonaws.com (mismas URLs que la v3),
+  en vez del content-pack local. El content-pack sigue en el repo como
+  paquete de referencia/manifiesto (brief, equipo, asset-map, notas de
+  calidad), pero index.html ya no depende de sus archivos de imagen.
+  Se agregó onerror también a las fotos grandes de la galería de "Our
+  Spaces" (antes solo la miniatura de tarjeta y las fotos de equipo lo
+  tenían) para que un link roto no rompa la vista, solo oculte la foto.
   - Precios y días de instalación por categoría (ejemplos publicados por
     el sitio, no cotización) se sumaron a la intro de cada categoría,
     tomados de content/brief-presentacion-es.md.
@@ -479,7 +490,7 @@
           <div class="story-quote">This isn't just about organization. It's about giving you a home that helps you live better.</div>
           <div class="story-signoff"><strong>Ronald &amp; Rosa Perez</strong>Owner &amp; President, Inspired Closets Houston</div>
         </div>
-        <div class="ph story-photo" style="padding:0;border-style:solid;overflow:hidden;"><img src="inspired-closets-houston-content-pack/images/overview/showroom.jpg" alt="Inspired Closets Houston showroom" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.outerHTML='&lt;div class=&quot;ph story-photo&quot;&gt;Photo: Ronald &amp; Rosa Perez, or the Houston showroom&lt;small&gt;Replace this block with an &amp;lt;img&amp;gt;&lt;/small&gt;&lt;/div&gt;';"></div>
+        <div class="ph story-photo" style="padding:0;border-style:solid;overflow:hidden;"><img src="https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2023/03/02103514/showroom.jpg" alt="Inspired Closets Houston showroom" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.outerHTML='&lt;div class=&quot;ph story-photo&quot;&gt;Photo: Ronald &amp; Rosa Perez, or the Houston showroom&lt;small&gt;Replace this block with an &amp;lt;img&amp;gt;&lt;/small&gt;&lt;/div&gt;';"></div>
       </div>
     </section>
 
@@ -661,22 +672,22 @@
   // URL ever breaks, onerror below falls back to the initials placeholder.
   const TEAM = [
     { id: 'ronald', name: 'Ronald Perez', role: 'Business Operations', initials: 'RP',
-      photo: 'inspired-closets-houston-content-pack/images/team/ronald-perez.jpg',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2026/02/10141155/f-2-19-23634480_tgU13OP6_Ronald_Perez_480x480_acf_cropped.jpg',
       desc: '20+ years building businesses across hospitality, telecom, and tech — now bringing that same operational eye to Houston.', presenter: true },
     { id: 'rosa', name: 'Rosa Perez', role: 'Finance Director', initials: 'RP',
-      photo: 'inspired-closets-houston-content-pack/images/team/rosa-perez.jpg',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2026/02/10141341/f-2-19-23634480_DlUVUT93_Rosa_Perez_480x480_acf_cropped.jpg',
       desc: '25+ years in procurement and operations, keeping every project on time, on budget, and beyond expectations.', presenter: true },
     { id: 'pati', name: 'Patricia "Pati" Juarez', role: 'Head Designer', initials: 'PJ',
-      photo: 'inspired-closets-houston-content-pack/images/team/pati-juarez.jpg',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/11/19105857/Pati-min-scaled_480x480_acf_cropped_480x480_acf_cropped.jpg',
       desc: 'Nearly 20 years in hospitality leadership plus five in real estate, now designing walk-ins that balance style with everyday practicality.', presenter: true },
     { id: 'merary', name: 'Merary Torres', role: 'Designer', initials: 'MT',
-      photo: 'inspired-closets-houston-content-pack/images/team/merary-torres.jpg',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2026/07/28234534/Merary_Torres_Houston_Headshot_480x480_acf_cropped.jpg',
       desc: 'Houston native with a decade in interior design, space planning, and cabinet design — loves seeing a client\u2019s vision come to life.', presenter: true },
     { id: 'cassandra', name: 'Cassandra Perez', role: 'Showroom Coordinator', initials: 'CP',
-      photo: 'inspired-closets-houston-content-pack/images/team/cassandra-perez.jpg',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/11/19105958/cassandra-min-scaled_480x480_acf_cropped_480x480_acf_cropped.jpg',
       desc: 'Houston native with a global perspective on design, ready to help you get started in the showroom.', presenter: true },
     { id: 'juan', name: 'Juan Juarez', role: 'Operations Manager', initials: 'JJ',
-      photo: 'inspired-closets-houston-content-pack/images/team/juan-juarez.jpg',
+      photo: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/11/19105912/Juan-min-scaled_480x480_acf_cropped_480x480_acf_cropped.jpg',
       desc: 'Former Marine Corps logistics — brings that same precision to making sure every install runs on schedule.', presenter: true }
   ];
 
@@ -773,86 +784,85 @@
   // verificadas del content-pack (inspired-closets-houston-content-pack/),
   // 3 fotos por categoría + precio/tiempo de instalación de referencia
   // tomados de content/brief-presentacion-es.md.
-  const IMG = 'inspired-closets-houston-content-pack/images/';
   const SPACES = [
     {
       id: 'closets', title: 'Closets', live: true,
-      cover: IMG + 'services/closet/boutique.jpg',
+      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27084219/IC_00529.tif-crop-1.jpg',
       intro: 'Storage designed around your wardrobe, your routines, and your home\'s aesthetic — from boutique to walk-in, with soft-close drawers, double hanging, shoe storage, jewelry trays, and custom lighting. Projects range from about $2,000 to over $20,000, with installation taking 1 to 5 days.',
       images: [
-        { src: IMG + 'services/closet/boutique.jpg', label: 'Boutique', desc: 'A boutique closet built for elevated wardrobe display and organization.' },
-        { src: IMG + 'services/closet/reach-in.jpg', label: 'Reach-In', desc: 'A compact closet with fully custom storage.' },
-        { src: IMG + 'services/closet/walk-in.jpg', label: 'Walk-In', desc: 'A walk-in closet with functional zones and personalization.' }
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27084219/IC_00529.tif-crop-1.jpg', label: 'Boutique', desc: 'A boutique closet built for elevated wardrobe display and organization.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091738/IC_PalmBeach_011-crop-400x400-1.jpg', label: 'Reach-In', desc: 'A compact closet with fully custom storage.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27092313/D_1481-400x400-1.jpg', label: 'Walk-In', desc: 'A walk-in closet with functional zones and personalization.' }
       ]
     },
     {
       id: 'pantry', title: 'Pantry', live: true,
-      cover: IMG + 'services/pantry/galley.jpg',
+      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091139/OH_692-400x400-1.jpg',
       intro: 'Cabinets, baskets, and adjustable shelving designed to maximize space and make meal prep and entertaining easier. Roughly $2,000–$16,000, with installation taking 1 to 3 days.',
       images: [
-        { src: IMG + 'services/pantry/galley.jpg', label: 'Galley', desc: 'A galley-style pantry with fully custom storage.' },
-        { src: IMG + 'services/pantry/reach-in.jpg', label: 'Reach-In', desc: 'Organization that makes the most of a compact pantry.' },
-        { src: IMG + 'services/pantry/walk-in.jpeg', label: 'Walk-In', desc: 'A walk-in pantry with easy access and dedicated storage zones.' }
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091139/OH_692-400x400-1.jpg', label: 'Galley', desc: 'A galley-style pantry with fully custom storage.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/06153456/reach-in-pantry.jpg', label: 'Reach-In', desc: 'Organization that makes the most of a compact pantry.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/07125420/IC_Jacksonville_018.jpg-crop-1.jpeg', label: 'Walk-In', desc: 'A walk-in pantry with easy access and dedicated storage zones.' }
       ]
     },
     {
       id: 'laundry', title: 'Laundry Room', live: true,
-      cover: IMG + 'services/laundry-room/dual-space.jpg',
+      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/06155753/laundry-dual-space.jpg',
       intro: 'Space to hang and dry, built-in hampers, work surfaces, and storage for cleaning supplies — designed to cut down on clutter. Roughly $1,000–$15,000, with installation taking 1 to 3 days.',
       images: [
-        { src: IMG + 'services/laundry-room/dual-space.jpg', label: 'Dual Space', desc: 'A laundry room combined with another use for the home.' },
-        { src: IMG + 'services/laundry-room/galley.jpeg', label: 'Galley', desc: 'A linear laundry room with storage and work surfaces.' },
-        { src: IMG + 'services/laundry-room/open-room.jpeg', label: 'Open Room', desc: 'An open laundry room with dedicated functional zones.' }
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/06155753/laundry-dual-space.jpg', label: 'Dual Space', desc: 'A laundry room combined with another use for the home.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/07123849/IC_LasVegas_002.tif-crop-1.jpeg', label: 'Galley', desc: 'A linear laundry room with storage and work surfaces.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/07125019/IC_Jacksonville_023.jpg-crop-1.jpeg', label: 'Open Room', desc: 'An open laundry room with dedicated functional zones.' }
       ]
     },
     {
       id: 'garage', title: 'Garage', live: true,
-      cover: IMG + 'services/garage/cabinets.jpg',
+      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2023/06/07165506/Inspired_Garage_Cabinet_with_Draws.png',
       intro: 'Durable, organized systems that put the garage to work for tools, sports gear, projects, and seasonal storage: cabinets with doors, shoe storage, slatwall panels, hooks, baskets, and magnetic bars.',
       images: [
-        { src: IMG + 'services/garage/cabinets.jpg', label: 'Cabinets With Doors', desc: 'Cabinets with hinged or sliding doors for taller items.' },
-        { src: IMG + 'services/garage/shoe-storage.jpg', label: 'Shoe Storage', desc: 'Customizable shoe storage.' },
-        { src: IMG + 'services/garage/slatwall.jpg', label: 'Slatwall and Accessories', desc: 'Panels, hooks, baskets, and bars for tools.' }
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2023/06/07165506/Inspired_Garage_Cabinet_with_Draws.png', label: 'Cabinets With Doors', desc: 'Cabinets with hinged or sliding doors for taller items.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2023/06/07165505/Inspired_Garage_Shoe_Storage.png', label: 'Shoe Storage', desc: 'Customizable shoe storage.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2023/06/07165505/Inspired_Garage_Slatwall.png', label: 'Slatwall and Accessories', desc: 'Panels, hooks, baskets, and bars for tools.' }
       ]
     },
     {
       id: 'home-office', title: 'Home Office', live: true,
-      cover: IMG + 'services/home-office/desk-and-cabinets.jpg',
+      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27085843/D_553-2.jpg',
       intro: 'Built-in desks, drawers, decorative shelving, libraries, and stations for crafts or gift-wrapping — built for focus, order, and multiple uses. Roughly $1,000–$15,000, with installation taking 1 to 2 days.',
       images: [
-        { src: IMG + 'services/home-office/desk-and-cabinets.jpg', label: 'Desk and Cabinets', desc: 'A built-in desk with cabinets for working in an organized space.' },
-        { src: IMG + 'services/home-office/dual-space.jpeg', label: 'Dual Space', desc: 'An office integrated into a dual-use space.' },
-        { src: IMG + 'services/home-office/library-wall.jpg', label: 'Library Wall', desc: 'A library wall with built-in storage.' }
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27085843/D_553-2.jpg', label: 'Desk and Cabinets', desc: 'A built-in desk with cabinets for working in an organized space.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/07132135/IC_SouthwestFlorida_051.jpg-crop-3.jpeg', label: 'Dual Space', desc: 'An office integrated into a dual-use space.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091232/D_1204-1-400x400-1.jpg', label: 'Library Wall', desc: 'A library wall with built-in storage.' }
       ]
     },
     {
       id: 'murphy-bed', title: 'Murphy Bed', live: true,
-      cover: IMG + 'services/murphy-bed/queen-bed.jpg',
+      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091623/D_1519-400x400-1.jpg',
       intro: 'Sleep solutions built into offices, libraries, playrooms, or living rooms, so you can host guests without dedicating a whole room to it. Roughly $7,000–$15,000, with installation taking 1 to 2 days.',
       images: [
-        { src: IMG + 'services/murphy-bed/dual-space.jpg', label: 'Dual Space', desc: 'A murphy bed built into a multi-function room.' },
-        { src: IMG + 'services/murphy-bed/queen-bed.jpg', label: 'Queen Bed', desc: 'A queen murphy bed with built-in storage.' },
-        { src: IMG + 'services/murphy-bed/twin-bed.jpg', label: 'Twin Bed', desc: 'A twin murphy bed that makes the most of the space.' }
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/07082833/murphy-bed-dual-space.jpg', label: 'Dual Space', desc: 'A murphy bed built into a multi-function room.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091623/D_1519-400x400-1.jpg', label: 'Queen Bed', desc: 'A queen murphy bed with built-in storage.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27092025/D_941-1920x1277-1.jpg', label: 'Twin Bed', desc: 'A twin murphy bed that makes the most of the space.' }
       ]
     },
     {
       id: 'entryway', title: 'Entryway', live: true,
-      cover: IMG + 'services/entryway/entryway.jpg',
+      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27090834/D_479-e1617040636868-400x400-1.jpg',
       intro: 'Benches, cabinets, shelving, cubbies, and storage for shoes, bags, and sports gear — designed to organize high-traffic zones. Roughly $1,000–$15,000, with installation taking 1 to 2 days.',
       images: [
-        { src: IMG + 'services/entryway/dual-space.jpg', label: 'Dual Space', desc: 'An entryway combined with another use for the home.' },
-        { src: IMG + 'services/entryway/entryway.jpg', label: 'Entryway', desc: 'Storage for a high-traffic entry zone.' },
-        { src: IMG + 'services/entryway/foyer.jpg', label: 'Foyer', desc: 'A storage solution for the foyer.' }
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/07090921/entryway-dual-space.jpg', label: 'Dual Space', desc: 'An entryway combined with another use for the home.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27090834/D_479-e1617040636868-400x400-1.jpg', label: 'Entryway', desc: 'Storage for a high-traffic entry zone.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/07092943/foyer.jpg', label: 'Foyer', desc: 'A storage solution for the foyer.' }
       ]
     },
     {
       id: 'entertainment', title: 'Entertainment', live: true,
-      cover: IMG + 'services/entertainment/built-ins.jpg',
+      cover: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27085117/DS_597-1920x1440-1.jpg',
       intro: 'Built-in cabinets, floating shelves, and custom storage for family rooms, media rooms, work, and entertainment. Roughly $1,000–$20,000, with installation taking 1 to 3 days.',
       images: [
-        { src: IMG + 'services/entertainment/built-ins.jpg', label: 'Built-Ins', desc: 'A built-in, custom entertainment center.' },
-        { src: IMG + 'services/entertainment/dual-space.jpg', label: 'Dual Space', desc: 'A shared space for work and entertainment.' },
-        { src: IMG + 'services/entertainment/media-center.jpg', label: 'Media Center', desc: 'Cabinets and shelving for media and personal items.' }
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27085117/DS_597-1920x1440-1.jpg', label: 'Built-Ins', desc: 'A built-in, custom entertainment center.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2025/02/07092210/library-dual-space.jpg', label: 'Dual Space', desc: 'A shared space for work and entertainment.' },
+        { src: 'https://inspiredclosetsmediafiles.s3.amazonaws.com/wp-content/uploads/2024/11/27091328/IC_Austin_001-400x400-1.jpg', label: 'Media Center', desc: 'Cabinets and shelving for media and personal items.' }
       ]
     }
   ];
@@ -896,7 +906,7 @@
     const imgs = activeSpace.images;
     spaceGalleryTrack.innerHTML = imgs.map((img, i) => `
       <div class="space-gallery-slide${i === activeImgIndex ? ' active' : ''}">
-        <img src="${img.src}" alt="${activeSpace.title} — ${img.label}" loading="lazy">
+        <img src="${img.src}" alt="${activeSpace.title} — ${img.label}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.classList.add('is-fallback');">
         <div class="space-gallery-caption"><strong>${img.label}</strong>${img.desc}</div>
       </div>
     `).join('');
