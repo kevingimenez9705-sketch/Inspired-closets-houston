@@ -928,6 +928,7 @@
 
   function openSpace(id, triggerEl) {
     const space = SPACES.find(s => s.id === id && s.live);
+    if (typeof dbgLog === 'function') dbgLog('[openSpace] id=' + id + ' found=' + !!space);
     if (!space) return;
     activeSpace = space;
     activeImgIndex = 0;
@@ -945,8 +946,28 @@
     if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') lastFocusedEl.focus();
   }
 
+  // ---- TEMPORARY DEBUG PANEL (remove once the click issue is diagnosed) ----
+  const dbg = document.createElement('div');
+  dbg.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:99999;max-width:92vw;max-height:40vh;overflow:auto;background:#111;color:#0f0;font:11px/1.4 monospace;padding:8px 10px;border-radius:6px;opacity:0.95;pointer-events:none;white-space:pre-wrap;';
+  dbg.textContent = 'DEBUG PANEL — click any "Our Spaces" card\n';
+  document.body.appendChild(dbg);
+  function dbgLog(msg) {
+    dbg.textContent += msg + '\n';
+    dbg.scrollTop = dbg.scrollHeight;
+  }
+  document.addEventListener('click', (e) => {
+    const card = e.target.closest && e.target.closest('.space-card');
+    if (!card && !spacesGrid.contains(e.target)) return;
+    const top = document.elementFromPoint(e.clientX, e.clientY);
+    dbgLog('[capture] target=' + e.target.tagName + '.' + (e.target.className||'') +
+      ' | elementFromPoint=' + (top ? top.tagName + '.' + (top.className||'') : 'null') +
+      ' | space=' + (card ? card.dataset.space : 'none'));
+  }, true);
+  // ---- END DEBUG PANEL SETUP ----
+
   spacesGrid.addEventListener('click', (e) => {
     const btn = e.target.closest('.space-card.is-live');
+    dbgLog('[spacesGrid handler] btn found=' + !!btn + (btn ? ' (' + btn.dataset.space + ')' : ''));
     if (btn) openSpace(btn.dataset.space, btn);
   });
   spaceClose.addEventListener('click', closeSpace);
