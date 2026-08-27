@@ -1,3 +1,11 @@
+> **Actualización 2026-08-27:** ya se implementó lo descripto abajo. Los 4
+> puntos sin bloqueo (1, 2, 7, 10) están terminados. Los 6 restantes (3, 4,
+> 5, 6, 8, 9) están construidos en `index.html` como secciones nuevas con
+> contenido BORRADOR, cada una con una nota visible en el sitio
+> ("Pendiente de confirmar" / "Bloqueante") que explica exactamente qué
+> falta. Ver el resumen al final de este documento para el detalle sección
+> por sección de qué quedó como placeholder.
+
 # Revisión de alcance — Feedback del cliente sobre Preview V1.1
 
 Fuente: `Inspired_Closet_Presentation_Comments.pdf` (10 páginas, comentarios del
@@ -266,3 +274,34 @@ Confirmar con el cliente, punto por punto, los "abiertos" marcados arriba
 de iniciar la implementación. Con eso confirmado se puede planificar en
 fases: Fase 1 (bajo esfuerzo, sin bloqueos) → Fase 2 (secciones nuevas con
 contenido ya confirmado).
+
+---
+
+## Estado tras la implementación (2026-08-27)
+
+`index.html` pasó de 9 a 15 secciones. Así quedó cada punto:
+
+| # | Punto | Estado en el sitio |
+|---|-------|---------------------|
+| 1 | Portada — elemento gráfico | ✅ Implementado. Círculos concéntricos en degradado vino, sección Welcome. |
+| 2 | Our Spaces — fotos más grandes | ✅ Implementado. Cards a `aspect-ratio 4:3` (antes 84px fijos) y modal interno ampliado a 920px / 16:10 (antes 560px / 1:1). |
+| 7 | Our Process — 5 pasos + click | ✅ Implementado. 5º paso "Love Your Closet" agregado; cada paso expande al click con detalle adicional (copy borrador, ver abajo). |
+| 10 | Cierre "Choose your adventure" | ✅ Implementado. Dos tarjetas (Option A: diseño en casa / Option B: showroom) con los datos de contacto reales existentes. |
+| 3 | Finishes, Hardware & Accessories | 🟡 Sección nueva construida con acabados y hardware de **muestra genérica** (nombres de color estándar de industria, no el catálogo real). Nota visible en el sitio pidiendo el catálogo real de Houston. |
+| 4 | Panel vs Hardwood | 🟡 Sección nueva construida con la comparativa genérica (panel de ingeniería vs. madera maciza), sin nombrar una marca/material específico. Nota visible pidiendo confirmar el material real. |
+| 5 | Envision (video AR) | 🟡 Sección nueva construida (copy + layout), con el video como placeholder explícito. Nota visible marcada como **bloqueante**: falta confirmar si Houston ofrece este servicio. |
+| 6 | Guarantee (4 garantías) | 🟡 Sección nueva construida con las 4 garantías y descripciones genéricas (sin cifras específicas tipo "83% del valor de reventa"). Nota visible pidiendo las condiciones exactas de Houston. |
+| 8 | Financing | 🟡 Sección nueva construida (copy + estructura de oferta), **sin inventar tasas ni montos** — el bloque de oferta dice explícitamente "Financing details pending". Nota visible marcada como **bloqueante**: falta confirmar proveedor y condiciones. |
+| 9 | Before & After | 🟡 Sección nueva construida reusando las fotos reales "after" de Our Spaces; el lado "before" queda como placeholder punteado (sin foto real). Nota visible marcada como **bloqueante**: faltan fotos "antes" reales de Houston. |
+
+Todas las secciones marcadas 🟡 usan el mismo lenguaje visual que el resto
+del archivo para "falta contenido real" (el patrón `.ph`, ya usado en todo
+el sitio para fotos de equipo/proyectos que faltan), más una nota de texto
+(`.pending-note`) al pie de cada sección que dice exactamente qué falta y
+por qué. Nada de esto se presenta como dato final: es la base para seguir
+completando a medida que el cliente confirme cada punto.
+
+**Siguiente paso:** a medida que el cliente vaya confirmando cada bloqueante
+(catálogo de finishes/hardware, material real del panel, si existe Envision
+en Houston, condiciones de garantía, proveedor de financiamiento, fotos
+"antes"), reemplazar el contenido de muestra en la sección correspondiente.
